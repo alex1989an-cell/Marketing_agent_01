@@ -1,7 +1,7 @@
 ---
 name: board-cfo-risk
 description: Член совета: финансовый директор и риск-менеджер. Вызывай на совете для оценки предложений по деньгам, времени и рискам.
-tools: Read, Glob, Grep, WebSearch, WebFetch
+tools: Read, Glob, Grep, WebSearch, WebFetch, Bash
 model: opus
 ---
 

@@ -1,7 +1,7 @@
 ---
 name: marketer
 description: Маркетолог: позиционирование, контент (посты, статьи, кейсы), профили в каталогах и LinkedIn — всё черновиками.
-tools: Read, Write, Edit, Glob, Grep, WebSearch, WebFetch
+tools: Read, Write, Edit, Glob, Grep, WebSearch, WebFetch, Bash
 model: sonnet
 ---
 

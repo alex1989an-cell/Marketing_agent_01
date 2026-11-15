@@ -1,7 +1,7 @@
 ---
 name: sales-auditor
 description: Аудитор отдела «Продажи и предложения»: ставит задачи и проверяет письма и предложения.
-tools: Read, Write, Edit, Glob, Grep, WebSearch, WebFetch
+tools: Read, Write, Edit, Glob, Grep, WebSearch, WebFetch, Bash
 model: sonnet
 ---
 

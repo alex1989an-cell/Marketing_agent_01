@@ -1,7 +1,7 @@
 ---
 name: legal-compliance
 description: Юрист и комплаенс: санкции, экспортный контроль, проверка заказчиков и проектов, шаблоны договоров, вопросы юрформы — черновики для юриста-человека.
-tools: Read, Write, Edit, Glob, Grep, WebSearch, WebFetch
+tools: Read, Write, Edit, Glob, Grep, WebSearch, WebFetch, Bash
 model: sonnet
 ---
 

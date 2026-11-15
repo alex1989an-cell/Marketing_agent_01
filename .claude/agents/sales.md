@@ -1,7 +1,7 @@
 ---
 name: sales
 description: Отдел продаж: черновики писем потенциальным заказчикам, коммерческие предложения, вопросы для квалификации — только черновики.
-tools: Read, Write, Edit, Glob, Grep, WebSearch, WebFetch
+tools: Read, Write, Edit, Glob, Grep, WebSearch, WebFetch, Bash
 model: sonnet
 ---
 

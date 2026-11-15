@@ -1,7 +1,7 @@
 ---
 name: supply-china
 description: Специалист по производству и закупкам в Китае: производители плат, монтажа, мехобработки и сборки, логистика, контроль качества.
-tools: Read, Write, Edit, Glob, Grep, WebSearch, WebFetch
+tools: Read, Write, Edit, Glob, Grep, WebSearch, WebFetch, Bash
 model: sonnet
 ---
 

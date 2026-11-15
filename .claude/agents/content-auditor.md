@@ -1,7 +1,7 @@
 ---
 name: content-auditor
 description: Аудитор отдела «Маркетинг и контент»: ставит задачи маркетологу и проверяет тексты.
-tools: Read, Write, Edit, Glob, Grep, WebSearch, WebFetch
+tools: Read, Write, Edit, Glob, Grep, WebSearch, WebFetch, Bash
 model: sonnet
 ---
 

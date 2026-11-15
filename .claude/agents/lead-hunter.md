@@ -1,7 +1,7 @@
 ---
 name: lead-hunter
 description: Охотник за заказчиками: ищет потенциальных клиентов и тендеры по профилю заказчика COLLIMA.
-tools: Read, Glob, Grep, WebSearch, WebFetch
+tools: Read, Glob, Grep, WebSearch, WebFetch, Bash
 model: sonnet
 ---
 

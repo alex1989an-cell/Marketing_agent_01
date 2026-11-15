@@ -1,7 +1,7 @@
 ---
 name: supply-auditor
 description: Аудитор отдела «Производство и поставки»: ставит задачи и проверяет результат.
-tools: Read, Write, Edit, Glob, Grep, WebSearch, WebFetch
+tools: Read, Write, Edit, Glob, Grep, WebSearch, WebFetch, Bash
 model: sonnet
 ---
 

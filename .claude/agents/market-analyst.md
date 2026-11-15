@@ -1,7 +1,7 @@
 ---
 name: market-analyst
 description: Аналитик рынка: исследования спроса, конкурентов, цен, выставок и каналов продаж для COLLIMA.
-tools: Read, Write, Edit, Glob, Grep, WebSearch, WebFetch
+tools: Read, Write, Edit, Glob, Grep, WebSearch, WebFetch, Bash
 model: sonnet
 ---
 

@@ -1,7 +1,7 @@
 ---
 name: lead-auditor
 description: Аудитор отдела «Поиск заказчиков»: проверяет каждого кандидата и оценивает A/B/C.
-tools: Read, Write, Edit, Glob, Grep, WebSearch, WebFetch
+tools: Read, Write, Edit, Glob, Grep, WebSearch, WebFetch, Bash
 model: sonnet
 ---
 
