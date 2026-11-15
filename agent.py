@@ -26,7 +26,7 @@ from claude_agent_sdk import (
 
 ROOT = Path(__file__).parent
 OUTPUT = ROOT / "output"
-BRAND_FILE = ROOT / "brand.md"
+BRAND_FILE = ROOT / "company" / "profile.md"
 CONTENT_PLAN = OUTPUT / "content_plan.csv"
 
 MODEL = os.getenv("MARKETING_AGENT_MODEL", "claude-opus-5-5")

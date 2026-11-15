@@ -1,0 +1,399 @@
+<title>Штаб COLLIMA</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one narrow column for a side panel; from 900px agents on the left, schedule and log on the right.
+   Palette and type follow the COLLIMA site: drawing-sheet neutrals, amber accent, mono labels. */
+:root {
+  --bg: #F3F5F8; --panel: #FFFFFF; --line: #D6DCE4; --fg: #121821; --muted: #5A6676;
+  --accent: #835A07; --accent-ink: #FFFFFF; --accent-soft: #F5EAD2;
+  --work: #2F6FB3; --work-soft: #E3EEF9; --review: #835A07; --review-soft: #F5EAD2;
+  --err: #B3261E; --err-soft: #FBE7E5; --off: #646F7D; --track: #C9D1DB;
+  --f-display: "Inter Tight", "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0B0E13; --panel: #11161D; --line: #232C38; --fg: #E7ECF2; --muted: #8C98A8;
+    --accent: #F2B544; --accent-ink: #14100A; --accent-soft: #2A2213;
+    --work: #78B0EC; --work-soft: #142538; --review: #F2B544; --review-soft: #2A2213;
+    --err: #F2786D; --err-soft: #3A1715; --off: #7D8796; --track: #2E3846;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0B0E13; --panel: #11161D; --line: #232C38; --fg: #E7ECF2; --muted: #8C98A8;
+  --accent: #F2B544; --accent-ink: #14100A; --accent-soft: #2A2213;
+  --work: #78B0EC; --work-soft: #142538; --review: #F2B544; --review-soft: #2A2213;
+  --err: #F2786D; --err-soft: #3A1715; --off: #7D8796; --track: #2E3846;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--fg); font-family: var(--f-body); font-size: 14px; line-height: 1.45;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 16px 32px;
+}
+.wrap { max-width: 1180px; margin: 0 auto; display: grid; gap: 16px; }
+.mono { font-family: var(--f-mono); }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* header */
+.top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; }
+.brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.brand svg { width: 30px; height: 30px; flex: none; }
+.brand h1 { margin: 0; font-family: var(--f-display); font-size: 20px; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; }
+.kicker { font-family: var(--f-mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
+.sys { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.pill { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border: 1px solid var(--line); background: var(--panel); font-size: 12px; font-weight: 600; }
+.pill .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--work); }
+.pill[data-paused="true"] .dot { background: var(--off); }
+.btn {
+  font: inherit; font-size: 13px; font-weight: 600; padding: 7px 12px; border: 1px solid var(--line);
+  background: var(--panel); color: var(--fg); cursor: pointer;
+}
+.btn:hover { border-color: var(--accent); }
+.btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.btn:disabled { opacity: .55; cursor: default; }
+.btn:focus-visible, .switch input:focus-visible + .knob { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* stats */
+.stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border: 1px solid var(--line); background: var(--panel); }
+.stat { padding: 10px 12px; border-left: 1px solid var(--line); min-width: 0; }
+.stat:first-child { border-left: 0; }
+.stat b { display: block; font-family: var(--f-display); font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.stat span { color: var(--muted); font-size: 12px; }
+.stat.work b { color: var(--work); }
+@media (max-width: 420px) {
+  .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .stat:nth-child(3) { border-left: 0; }
+  .stat:nth-child(n+3) { border-top: 1px solid var(--line); }
+}
+
+.note { padding: 10px 12px; border: 1px solid var(--line); background: var(--panel); color: var(--muted); font-size: 13px; }
+.note.warn { border-color: var(--review); background: var(--review-soft); color: var(--fg); }
+
+.cols { display: grid; gap: 16px; }
+@media (min-width: 900px) { .cols { grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); align-items: start; } }
+.col { display: grid; gap: 16px; min-width: 0; }
+
+section h2 { margin: 0 0 8px; font-family: var(--f-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); display: flex; gap: 8px; align-items: baseline; }
+section h2 em { font-style: normal; color: var(--accent); }
+
+/* agent list */
+.group { border: 1px solid var(--line); background: var(--panel); }
+.group + .group { margin-top: 10px; }
+.group-title { padding: 8px 12px; border-bottom: 1px solid var(--line); font-family: var(--f-display); font-weight: 600; font-size: 14px; display: flex; justify-content: space-between; gap: 8px; }
+.group-title small { font-family: var(--f-mono); font-weight: 400; font-size: 11px; color: var(--muted); }
+ul.agents { list-style: none; margin: 0; padding: 0; }
+.agent { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px; align-items: start; padding: 10px 12px; border-top: 1px solid var(--line); }
+.agent:first-child { border-top: 0; }
+.agent.aud { padding-left: 28px; background: color-mix(in srgb, var(--bg) 45%, var(--panel)); }
+.a-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; min-width: 0; }
+.a-name { font-weight: 600; }
+.a-role { color: var(--muted); font-size: 12.5px; }
+.a-line { margin-top: 4px; font-size: 12.5px; overflow-wrap: anywhere; }
+.a-line .lbl { font-family: var(--f-mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-right: 6px; }
+.chip { font-family: var(--f-mono); font-size: 10.5px; padding: 1px 6px; border: 1px solid var(--line); color: var(--muted); }
+.state { font-size: 11.5px; font-weight: 600; padding: 1px 7px; display: inline-flex; align-items: center; gap: 5px; }
+.state::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+.state.idle { color: var(--muted); }
+.state.working { color: var(--work); background: var(--work-soft); }
+.state.review { color: var(--review); background: var(--review-soft); }
+.state.error { color: var(--err); background: var(--err-soft); }
+.state.off { color: var(--off); }
+.agent[data-off="true"] .a-name, .agent[data-off="true"] .a-role { color: var(--off); }
+@media (prefers-reduced-motion: no-preference) {
+  .state.working::before { animation: pulse 1.4s ease-in-out infinite; }
+  @keyframes pulse { 50% { opacity: .25; } }
+}
+
+/* switch */
+.switch { position: relative; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; padding-top: 2px; }
+.switch input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.knob { width: 34px; height: 20px; border-radius: 10px; background: var(--track); position: relative; transition: background .15s; flex: none; }
+.knob::after { content: ""; position: absolute; top: 3px; left: 3px; width: 14px; height: 14px; border-radius: 50%; background: var(--panel); transition: transform .15s; }
+.switch input:checked + .knob { background: var(--accent); }
+.switch input:checked + .knob::after { transform: translateX(14px); background: var(--accent-ink); }
+.switch input:disabled + .knob { opacity: .5; }
+.switch .sw-txt { font-size: 11px; color: var(--muted); width: 26px; }
+
+/* schedule + log */
+.card { border: 1px solid var(--line); background: var(--panel); }
+.rows { list-style: none; margin: 0; padding: 0; }
+.rows li { padding: 9px 12px; border-top: 1px solid var(--line); display: grid; gap: 2px; min-width: 0; }
+.rows li:first-child { border-top: 0; }
+.rows .t { font-family: var(--f-mono); font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.rows .h { font-weight: 600; font-size: 13px; }
+.rows .d { font-size: 12.5px; color: var(--muted); overflow-wrap: anywhere; }
+.rows a { color: var(--accent); }
+.empty { padding: 14px 12px; color: var(--muted); font-size: 13px; }
+.foot { color: var(--muted); font-size: 12px; }
+.foot code { font-family: var(--f-mono); font-size: 11.5px; }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <svg viewBox="0 0 30 30" aria-hidden="true"><rect x="0.75" y="0.75" width="28.5" height="28.5" fill="none" stroke="var(--muted)" stroke-width="1.5"/><circle cx="15" cy="15" r="7.5" fill="none" stroke="var(--accent)" stroke-width="1.5"/><path d="M3 15h24" stroke="var(--accent)" stroke-width="1.5"/></svg>
+      <div>
+        <div class="kicker">COLLIMA · штаб агентов</div>
+        <h1>Табло агентов</h1>
+      </div>
+    </div>
+    <div class="sys">
+      <span class="pill" id="sysPill" data-paused="false"><span class="dot"></span><span id="sysText">Загрузка…</span></span>
+      <button class="btn" id="pauseBtn" type="button" disabled>Пауза для всех</button>
+    </div>
+  </header>
+
+  <div class="stats" aria-label="Сводка">
+    <div class="stat"><b id="sTotal">—</b><span>агентов</span></div>
+    <div class="stat"><b id="sActive">—</b><span>включены</span></div>
+    <div class="stat work"><b id="sWork">—</b><span>работают сейчас</span></div>
+    <div class="stat"><b id="sOff">—</b><span>выключены</span></div>
+  </div>
+
+  <div class="note" id="note" hidden></div>
+
+  <div class="cols">
+    <div class="col">
+      <section aria-labelledby="hAgents">
+        <h2 id="hAgents">Агенты <em id="hint">переключатель справа включает и выключает агента</em></h2>
+        <div id="agents">
+          <div class="group"><div class="empty">Загружаю список агентов…</div></div>
+        </div>
+      </section>
+    </div>
+    <div class="col">
+      <section aria-labelledby="hSched">
+        <h2 id="hSched">Расписание</h2>
+        <div class="card"><ul class="rows" id="sched"><li class="empty">Расписание появится после настройки.</li></ul></div>
+      </section>
+      <section aria-labelledby="hLog">
+        <h2 id="hLog">Последние запуски</h2>
+        <div class="card"><ul class="rows" id="log"><li class="empty">Запусков пока не было. Первый — после настройки расписания.</li></ul></div>
+      </section>
+      <p class="foot">Выключенный агент пропускает свои задачи при следующем запуске. Пауза для всех останавливает всю систему до возобновления. Отчёты и протоколы лежат в репозитории <code>Marketing_agent_01</code>.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  const $ = (id) => document.getElementById(id);
+  const TZ = "Europe/Minsk";
+  const STATE_LABEL = { idle: "ожидает", working: "работает", review: "на проверке", error: "ошибка", off: "выключен" };
+  let db = null, canWrite = false, agents = [], control = { paused: false }, readyAgents = false;
+  const pending = new Set();
+
+  function el(tag, cls, text) { const n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; }
+  function when(iso) {
+    if (!iso) return "";
+    const d = new Date(iso); if (isNaN(d)) return "";
+    const diff = (Date.now() - d.getTime()) / 60000;
+    let rel;
+    if (diff < 1) rel = "только что";
+    else if (diff < 60) rel = Math.round(diff) + " мин назад";
+    else if (diff < 60 * 24) rel = Math.round(diff / 60) + " ч назад";
+    else rel = Math.round(diff / 1440) + " дн назад";
+    return rel;
+  }
+  function abs(iso) {
+    const d = new Date(iso); if (isNaN(d)) return "";
+    return d.toLocaleString("ru-RU", { timeZone: TZ, day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" });
+  }
+  function note(text, warn) { const n = $("note"); if (!text) { n.hidden = true; return; } n.textContent = text; n.className = "note" + (warn ? " warn" : ""); n.hidden = false; }
+
+  function stateOf(a) { if (a.active === false) return "off"; return STATE_LABEL[a.status] ? a.status : "idle"; }
+
+  function agentRow(a, isAud) {
+    const li = el("li", "agent" + (isAud ? " aud" : ""));
+    const st = stateOf(a);
+    li.dataset.off = String(a.active === false);
+    const main = el("div", "a-main");
+    const head = el("div", "a-head");
+    head.append(el("span", "a-name", a.name || a.id));
+    head.append(el("span", "state " + st, STATE_LABEL[st]));
+    if (a.model) head.append(el("span", "chip", a.model));
+    main.append(head);
+    if (a.role) main.append(el("div", "a-role", a.role));
+    if (st === "working" || st === "review") {
+      if (a.task) { const l = el("div", "a-line"); l.append(el("span", "lbl", "сейчас"), document.createTextNode(a.task)); main.append(l); }
+    } else if (a.last_result || a.last_run) {
+      const l = el("div", "a-line");
+      l.append(el("span", "lbl", a.last_run ? when(a.last_run) : "итог"));
+      l.append(document.createTextNode(a.last_result || "запуск завершён"));
+      if (a.last_run) l.title = abs(a.last_run) + " (Минск)";
+      main.append(l);
+    }
+    if (st === "error" && a.error) { const l = el("div", "a-line"); l.style.color = "var(--err)"; l.textContent = a.error; main.append(l); }
+    li.append(main);
+
+    const lab = el("label", "switch");
+    const inp = document.createElement("input");
+    inp.type = "checkbox"; inp.setAttribute("role", "switch"); inp.id = "sw-" + a.id;
+    inp.checked = a.active !== false;
+    inp.disabled = !canWrite || pending.has(a.id);
+    inp.setAttribute("aria-label", (a.name || a.id) + ": " + (inp.checked ? "включён" : "выключен"));
+    inp.addEventListener("change", () => toggle(a, inp));
+    const txt = el("span", "sw-txt", inp.checked ? "вкл" : "выкл");
+    lab.append(inp, el("span", "knob"), txt);
+    li.append(lab);
+    return li;
+  }
+
+  function renderAgents() {
+    const box = $("agents");
+    box.textContent = "";
+    if (!agents.length) {
+      const g = el("div", "group");
+      g.append(el("div", "empty", readyAgents ? "Агенты ещё не зарегистрированы. Claude добавит их при настройке системы." : "Загружаю список агентов…"));
+      box.append(g);
+      return;
+    }
+    const sorted = agents.slice().sort((x, y) => (x.order ?? 999) - (y.order ?? 999));
+    const board = sorted.filter((a) => a.group === "board");
+    const heads = sorted.filter((a) => a.group === "dept");
+    const auds = sorted.filter((a) => a.group === "audit");
+    const other = sorted.filter((a) => !["board", "dept", "audit"].includes(a.group));
+
+    if (board.length) {
+      const g = el("div", "group");
+      const t = el("div", "group-title"); t.append(document.createTextNode("Совет директоров"), el("small", null, board.length + " агента"));
+      const ul = el("ul", "agents"); board.forEach((a) => ul.append(agentRow(a, false)));
+      g.append(t, ul); box.append(g);
+    }
+    heads.forEach((h) => {
+      const g = el("div", "group");
+      const t = el("div", "group-title"); t.append(document.createTextNode(h.dept_title || h.name), el("small", null, "агент + аудитор"));
+      const ul = el("ul", "agents");
+      ul.append(agentRow(h, false));
+      auds.filter((a) => a.audits === h.id).forEach((a) => ul.append(agentRow(a, true)));
+      g.append(t, ul); box.append(g);
+    });
+    const orphan = auds.filter((a) => !heads.some((h) => h.id === a.audits)).concat(other);
+    if (orphan.length) {
+      const g = el("div", "group");
+      const t = el("div", "group-title"); t.append(document.createTextNode("Другие"));
+      const ul = el("ul", "agents"); orphan.forEach((a) => ul.append(agentRow(a, a.group === "audit")));
+      g.append(t, ul); box.append(g);
+    }
+  }
+
+  function renderStats() {
+    const total = agents.length;
+    const on = agents.filter((a) => a.active !== false).length;
+    const work = agents.filter((a) => a.active !== false && (a.status === "working" || a.status === "review")).length;
+    $("sTotal").textContent = total ? total : "0";
+    $("sActive").textContent = on;
+    $("sWork").textContent = work;
+    $("sOff").textContent = total - on;
+  }
+
+  function renderControl() {
+    const paused = control.paused === true;
+    $("sysPill").dataset.paused = String(paused);
+    $("sysText").textContent = paused ? "Система на паузе" : "Система работает";
+    const b = $("pauseBtn");
+    b.textContent = paused ? "Возобновить работу" : "Пауза для всех";
+    b.className = "btn" + (paused ? " primary" : "");
+    b.disabled = !canWrite || pending.has("__control");
+  }
+
+  function renderSchedule(items) {
+    const ul = $("sched"); ul.textContent = "";
+    if (!items || !items.length) { ul.append(el("li", "empty", "Расписание появится после настройки.")); return; }
+    items.forEach((it) => {
+      const li = el("li");
+      li.append(el("span", "h", it.name || ""), el("span", "t", it.when || ""));
+      if (it.what) li.append(el("span", "d", it.what));
+      ul.append(li);
+    });
+  }
+
+  function renderLog(docs) {
+    const ul = $("log"); ul.textContent = "";
+    if (!docs.length) { ul.append(el("li", "empty", "Запусков пока не было. Первый — после настройки расписания.")); return; }
+    docs.forEach((r) => {
+      const li = el("li");
+      li.append(el("span", "t", abs(r.at) + " · " + when(r.at)));
+      li.append(el("span", "h", r.title || "Запуск"));
+      if (r.summary) li.append(el("span", "d", r.summary));
+      if (r.link && /^https:\/\//.test(r.link)) { const a = el("a", null, "Открыть отчёт"); a.href = r.link; a.target = "_blank"; a.rel = "noopener"; li.append(a); }
+      ul.append(li);
+    });
+  }
+
+  async function toggle(a, inp) {
+    if (!db || pending.has(a.id)) return;
+    const next = inp.checked;
+    pending.add(a.id); inp.disabled = true;
+    try {
+      await db.doc("agents/" + a.id).update({ active: next, toggled_at: new Date().toISOString() });
+    } catch (e) {
+      inp.checked = !next;
+      note("Не удалось переключить агента «" + (a.name || a.id) + "». Попробуйте ещё раз.", true);
+      if (e && e.code === "invalid_argument") { canWrite = false; }
+    } finally {
+      pending.delete(a.id); renderAgents();
+    }
+  }
+
+  $("pauseBtn").addEventListener("click", async () => {
+    if (!db || pending.has("__control")) return;
+    const next = !(control.paused === true);
+    pending.add("__control"); renderControl();
+    try {
+      await db.doc("system/control").set(Object.assign({}, control, { paused: next, changed_at: new Date().toISOString() }));
+    } catch (e) {
+      note("Не удалось изменить режим системы. Попробуйте ещё раз.", true);
+    } finally {
+      pending.delete("__control"); renderControl();
+    }
+  });
+
+  async function start() {
+    const timer = setTimeout(() => note("Данные табло пока не загрузились. Проверьте соединение, табло обновится само.", true), 10000);
+    const cl = window.claude && typeof window.claude.use === "function" ? window.claude : null;
+    db = cl ? await cl.use("db") : null;
+    if (!db) {
+      clearTimeout(timer);
+      $("sysText").textContent = "Нет доступа к данным";
+      note("Табло работает только в claude.ai под вашей учётной записью.", true);
+      readyAgents = true; renderAgents();
+      return;
+    }
+    const user = await cl.use("user");
+    if (user) {
+      try { const c = await user.can("data.write"); canWrite = c === null ? true : !!c; } catch (e) { canWrite = false; }
+    } else { canWrite = true; }
+    if (!canWrite) $("hint").textContent = "только просмотр";
+
+    db.collection("agents").onSnapshot((snap) => {
+      agents = snap.docs.filter((d) => d.exists).map((d) => Object.assign({ id: d.id }, d.data()));
+      readyAgents = !snap.metadata.fromCache || agents.length > 0;
+      if (!snap.metadata.fromCache) { clearTimeout(timer); note(""); }
+      renderAgents(); renderStats();
+    }, () => { clearTimeout(timer); note("Связь с данными табло прервалась. Обновите страницу позже.", true); });
+
+    db.doc("system/control").onSnapshot((d) => {
+      control = d.exists ? Object.assign({}, d.data()) : { paused: false };
+      renderControl();
+    }, () => {});
+
+    db.doc("system/schedule").onSnapshot((d) => {
+      renderSchedule(d.exists ? (d.data().items || []) : []);
+    }, () => {});
+
+    db.collection("runs").orderBy("at", "desc").limit(12).onSnapshot((snap) => {
+      renderLog(snap.docs.filter((d) => d.exists).map((d) => d.data()));
+    }, () => {});
+  }
+
+  renderAgents(); renderStats();
+  start();
+  setInterval(() => { if (agents.length) renderAgents(); }, 60000);
+})();
+</script>
