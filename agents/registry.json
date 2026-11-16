@@ -226,6 +226,19 @@
       "file": ".claude/agents/supply-auditor.md",
       "dept": "supply",
       "audits": "supply-china"
+    },
+    {
+      "id": "brand-creative",
+      "name": "Креативный директор",
+      "role": "Нейминг, слоганы, концепции бренда",
+      "group": "dept",
+      "model": "opus",
+      "order": 35,
+      "active": true,
+      "status": "idle",
+      "file": ".claude/agents/brand-creative.md",
+      "dept": "brand",
+      "dept_title": "Бренд и нейминг"
     }
   ]
 }
